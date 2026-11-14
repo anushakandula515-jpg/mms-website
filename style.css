@@ -175,7 +175,7 @@ section.alt { background: var(--cream); border-top: 1px solid var(--line); borde
 .cta .btn-soft { background: transparent; color: var(--cream); border-color: #6f8f66; }
 
 /* social */
-.social { display: flex; gap: 12px; justify-content: center; margin-top: 24px; }
+.social { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 24px; }
 .social a { display: inline-flex; align-items: center; gap: 8px; color: var(--cream); text-decoration: none; font-weight: 700; font-size: 15px; padding: 8px 14px; border-radius: 999px; border: 1.5px solid #6f8f66; }
 .social svg { width: 18px; height: 18px; }
 
@@ -193,3 +193,49 @@ footer nav { display: flex; gap: 18px; }
 .doc li { margin-bottom: .4em; }
 .doc .summary { background: var(--cream); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 20px 22px; margin: 24px 0 8px; }
 .doc .summary p:last-child { margin: 0; }
+
+/* ---------- gentle motion ---------- */
+/* hero: soft entrance on load */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.js .hero .eyebrow, .js .hero h1, .js .hero .lead, .js .hero .actions, .js .hero .pills, .js .hero-art {
+  animation: rise .9s cubic-bezier(.22, .7, .25, 1) both;
+}
+.js .hero h1 { animation-delay: .08s; }
+.js .hero .lead { animation-delay: .18s; }
+.js .hero .actions { animation-delay: .28s; }
+.js .hero .pills { animation-delay: .38s; }
+.js .hero-art { animation-delay: .2s; animation-duration: 1.2s; }
+
+/* hero phones float slowly, out of step with each other */
+@keyframes drift { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+.hero-art .phone.front { animation: drift 7s ease-in-out infinite; }
+.hero-art .phone.back { animation: drift 7s ease-in-out -3.5s infinite; }
+
+/* sections fade up as they scroll in */
+.js [data-reveal] {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity .8s ease, transform .8s cubic-bezier(.22, .7, .25, 1);
+  transition-delay: var(--d, 0ms);
+}
+.js [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* step numbers settle in like a bead dropping onto the mat */
+@keyframes settle { 0% { transform: scale(.4); } 70% { transform: scale(1.08); } 100% { transform: scale(1); } }
+.js .step.is-in::before { animation: settle .6s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--d, 0ms) + .25s); }
+
+/* small touches on hover */
+.brand img { transition: transform .5s ease; }
+.brand:hover img { transform: rotate(-6deg); }
+.age, .feature, .promise, .step { transition: transform .35s ease, box-shadow .35s ease; }
+.age:hover, .promise:hover, .step:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(62, 50, 39, .08); }
+.feature .ico { display: inline-block; transition: transform .4s ease; }
+.feature:hover .ico { transform: translateY(-3px) rotate(-6deg); }
+.pill { transition: background .3s ease, border-color .3s ease; }
+.pill:hover { background: #eef4ea; border-color: #cfe0c6; }
+
+/* respect "reduce motion" */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
